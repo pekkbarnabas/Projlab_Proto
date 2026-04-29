@@ -1,0 +1,24 @@
+# === Java specifikus ===
+*.class
+*.jar
+*.war
+*.ear
+bin/
+*.log
+
+
+.vscode/
+*.code-workspace
+
+
+.idea/
+*.iml
+out/
+gen/
+
+
+.DS_Store
+Thumbs.db
+
+
+.env
