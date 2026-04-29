@@ -18,6 +18,10 @@ public class Idojaras implements IIdoMulo {
         this.savok = savok;
     }
 
+    public int getIntenzitas() {
+        return intenzitas;
+    }
+
     @Override
     public void idotLep() {
         for (Sav s : savok) {

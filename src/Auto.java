@@ -179,4 +179,16 @@ public class Auto extends Jarmu {
         }
         return null;
     }
+
+    public boolean isElakadt() {
+        return this.elakadt;
+    }
+
+    public int getBuntetoido() {
+        return this.buntetoido;
+    }
+
+    public boolean isTesztSodrodas() {
+        return this.tesztSodrodas;
+    }
 }

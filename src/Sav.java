@@ -57,7 +57,7 @@ public class Sav implements IIdoMulo {
     public boolean isSozott() { return sozasIdozito > 0; }
     public Utszakasz getUtszakasz() { return utszakasz; }
     public int getSozasIdozito() {return sozasIdozito;}
-    
+
     // --- Fizikai Logika (Pszeudokód alapján) ---
     
     public void elfogad(Jarmu j) {
@@ -81,6 +81,8 @@ public class Sav implements IIdoMulo {
     public void hoCsokkent(int mennyiseg) {
         this.hoVastagsag -= mennyiseg;
         if (this.hoVastagsag < 0) this.hoVastagsag = 0;
+
+        this.zuzalekos = false; // Csökkentés után a zúzalék hatástalanná válik
     }
 
     public void hoNovel(int mennyiseg) {
@@ -117,7 +119,7 @@ public class Sav implements IIdoMulo {
         }
     }
 
-    
+    public boolean isZuzalekos() { return this.zuzalekos; }
 
 
 }
