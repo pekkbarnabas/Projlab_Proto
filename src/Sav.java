@@ -62,7 +62,7 @@ public class Sav implements IIdoMulo {
     
     public void elfogad(Jarmu j) {
         rajtaAllok.add(j);
-        
+        athaladasRegisztralasa();
         if (hoVastagsag > EXTREM_HO_SZINT) {
             j.elakad();
         } else if (jegPancel && csuszos) {
@@ -80,9 +80,20 @@ public class Sav implements IIdoMulo {
 
     public void hoCsokkent(int mennyiseg) {
         this.hoVastagsag -= mennyiseg;
-        if (this.hoVastagsag < 0) this.hoVastagsag = 0;
-
+        if (this.hoVastagsag < 0){
+            this.hoVastagsag = 0;
+        }
         this.zuzalekos = false; // Csökkentés után a zúzalék hatástalanná válik
+
+        if (this.hoVastagsag <= EXTREM_HO_SZINT) {
+            for (Jarmu j : rajtaAllok) {
+                if (j instanceof Auto) {
+                    ((Auto) j).setElakadt(false);
+                } else if (j instanceof Busz) {
+                    ((Busz) j).setElakadt(false);
+                }
+            }
+        }
     }
 
     public void hoNovel(int mennyiseg) {

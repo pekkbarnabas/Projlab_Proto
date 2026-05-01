@@ -94,7 +94,6 @@ public class Auto extends Jarmu {
         boolean blokkolt = false;
         if (aktualisSav != null) {
             blokkolt = aktualisSav.isBlokkolt();
-            aktualisSav.athaladasRegisztralasa(); // Koptatja a sávot
         }
 
         // Kikerülés logikája (strukturált vezérlés)
@@ -192,6 +191,10 @@ public class Auto extends Jarmu {
     public int getBuntetoido() {
         return this.buntetoido;
     }
+
+    public Csomopont getLakas() { return this.lakas; }
+
+    public Csomopont getMunkahely() { return this.munkahely; }
 
     public boolean isTesztSodrodas() {
         return this.tesztSodrodas;

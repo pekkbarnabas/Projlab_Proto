@@ -373,12 +373,18 @@ public class Vezerlo {
                     Auto a = (Auto) e.getValue();
                     if (a.isElakadt()) out.println("set jarmu " + e.getKey() + " elakadt true");
                     if (a.getBuntetoido() > 0) out.println("set jarmu " + e.getKey() + " buntetoido " + a.getBuntetoido());
-                    if (a.isTesztSodrodas()) out.println("set jarmu " + e.getKey() + " sodrodas true");
+                    if (!isRandom) {
+                        out.println("set jarmu " + e.getKey() + " sodrodas " + a.isTesztSodrodas());
+                    }
+                    if (a.getLakas() != null && a.getMunkahely() != null) {
+                        out.println("set utvonal " + e.getKey() + " " + a.getLakas().getNev() + " " + a.getMunkahely().getNev());
+                    }
                 } else if (e.getValue() instanceof Hokotro) {
                     Hokotro h = (Hokotro) e.getValue();
                     if (h.getFej() != null) out.println("equip " + e.getKey() + " " + h.getFej().getClass().getSimpleName().toLowerCase());
                 }
             }
+
         }
     }
 
