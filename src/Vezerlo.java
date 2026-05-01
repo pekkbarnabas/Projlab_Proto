@@ -297,7 +297,12 @@ public class Vezerlo {
              Csomopont c2 = csomopontok.get(szavak[4]);
              if (j == null || c1 == null || c2 == null) throw new Exception("Hibás entitás nevek!");
              
-             // Ide jön majd az útvonal beállítása, ha az Auto/Busz osztályban létrehozod a settert.
+            if (j instanceof Auto) {
+                 ((Auto) j).setUtvonal(c1, c2);
+             } else if (j instanceof Busz) {
+                 ((Busz) j).setUtvonal(Arrays.asList(c1, c2));
+             }
+
              System.out.println("Utvonal beallitva: " + c1.getNev() + " -> " + c2.getNev());
 
         } else if (szavak[1].equals("idojaras")) {

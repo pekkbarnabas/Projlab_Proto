@@ -22,6 +22,11 @@ public class Auto extends Jarmu {
     public void setElakadt(boolean e) { this.elakadt = e; }
     public void setBuntetoido(int b) { this.buntetoido = b; }
     public void setTesztSodrodas(boolean t) { this.tesztSodrodas = t; }
+    public void setUtvonal(Csomopont lakas, Csomopont munkahely) {
+        this.lakas = lakas;
+        this.munkahely = munkahely;
+        this.aktualisCel = munkahely;
+    }
 
     @Override
     public void elakad() {

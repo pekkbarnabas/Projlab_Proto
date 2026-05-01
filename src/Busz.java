@@ -21,6 +21,12 @@ public class Busz extends Jarmu {
     public void setTulajdonos(Buszvezeto tulajdonos) { this.tulajdonos = tulajdonos; }
     public void setBuntetoido(int b) { this.buntetoido = b; }
     public void setElakadt(boolean e) { this.elakadt = e; }
+    public void setUtvonal(List<Csomopont> vegallomasok) {
+        this.vegallomasok = vegallomasok;
+        if (!vegallomasok.isEmpty()) {
+            this.aktualisVegallomas = vegallomasok.get(0);
+        }
+    }
 
     @Override
     public void idotLep() {
