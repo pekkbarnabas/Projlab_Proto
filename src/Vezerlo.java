@@ -136,9 +136,6 @@ public class Vezerlo {
                         int n = Integer.parseInt(szavak[1]);
                         for (int i = 0; i < n; i++) tick();
                     }
-                    if (idojaras != null) {
-                        idojaras.idotLep();
-                    }
                     break;
                 case "random":
                     if (szavak.length < 2) throw new Exception("Kevés paraméter! (random on/off)");
@@ -333,7 +330,15 @@ public class Vezerlo {
              System.out.println("Utvonal beallitva: " + c1.getNev() + " -> " + c2.getNev());
 
         } else if (szavak[1].equals("idojaras")) {
-            if (szavak[2].equals("ho")) idojaras.setIntenzitas(Integer.parseInt(szavak[3]));
+            if (szavak.length < 4) throw new Exception("Kevés paraméter!");
+            if (szavak[2].equals("ho")) {
+                
+                // Beállítjuk az intenzitást 
+                idojaras.setIntenzitas(Integer.parseInt(szavak[3]));
+                
+                // Odaadjuk neki az összes sávot!
+                idojaras.setSavok(new ArrayList<>(savok.values()));
+            }
         }
     }
 
