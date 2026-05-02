@@ -74,7 +74,7 @@ public class Sav implements IIdoMulo {
             if (zuzalekos && hoVastagsag == 0) {
                 // Biztonságos áthaladás, a zúzalék megvéd
             } else {
-                j.megcsuszik();
+                //j.megcsuszik();
             }
         }
     }

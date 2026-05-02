@@ -35,8 +35,8 @@ public class Auto extends Jarmu {
 
     @Override
     public void utkozik(Jarmu masik) {
-        this.elakadt = true;
-        this.buntetoido = 3; // Globális baleseti büntetőidő
+        this.setElakadt(true);
+        this.setBuntetoido(3); // Globális baleseti büntetőidő
     }
 
     public void savotValt(Sav ujSav) {
@@ -50,7 +50,7 @@ public class Auto extends Jarmu {
 
     @Override
     public void megcsuszik() {
-        if (!tesztSodrodas) {
+        if (!this.isTesztSodrodas()) {
             this.setElakadt(true); 
             this.buntetoido = 1;
             if (aktualisSav != null) {
@@ -65,8 +65,8 @@ public class Auto extends Jarmu {
                 }
             }
         } else {
-            if (aktualisSav != null && !aktualisSav.getSzomszedokCsendes().isEmpty()) {
-                Sav s2 = aktualisSav.getSzomszedokCsendes().get(0);
+            if (aktualisSav != null && !aktualisSav.getSzomszedok().isEmpty()) {
+                Sav s2 = aktualisSav.getSzomszedok().get(0);
                 aktualisSav.eltavolit(this);
                 s2.elfogad(this);
                 this.aktualisSav = s2;
@@ -96,6 +96,11 @@ public class Auto extends Jarmu {
         boolean blokkolt = false;
         if (aktualisSav != null) {
             blokkolt = aktualisSav.isBlokkolt();
+        }
+
+        if (aktualisSav != null && aktualisSav.isJegpancel()) {
+            this.megcsuszik();
+            return;
         }
 
         // Kikerülés logikája (strukturált vezérlés)

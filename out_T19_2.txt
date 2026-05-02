@@ -1,0 +1,18 @@
+create csomopont c1
+create csomopont c2
+create utszakasz u1 c1 c2 100 0
+create sav s1 u1
+set sav s1 jeg true
+create jarmu auto a1 s1
+create jarmu auto a2 s1
+create jarmu auto a3 s1
+create jarmu auto a4 s1
+create jarmu auto a5 s1
+set utvonal a1 c1 c1
+set utvonal a2 c1 c1
+set utvonal a3 c1 c1
+set utvonal a4 c1 c1
+set utvonal a5 c1 c1
+
+//annyi hogy inputnal set sav s1 kuszob 5 , ilyen parancs nem létezik, a jegesedes kuszob hardcodeolva van
+//meg set uvonalak pluszba kiirodnak
