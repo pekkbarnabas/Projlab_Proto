@@ -35,13 +35,11 @@ public class Takarito {
         return false;
     }
 
-    public void vasarol(Arucikk a) {
+    public boolean vasarol(Arucikk a) {
         if (bolt != null) {
-            boolean sikeres = bolt.elad(this, a);
-            if (!sikeres) {
-                System.out.println("> ERROR: Nincs elegendo penz");
-            }
+            return bolt.elad(this, a);
         }
+        return false;
     }
 
     public void eszkozkiosztas(Hokotro h, IKotrofej ujFej) {

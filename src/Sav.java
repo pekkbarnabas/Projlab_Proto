@@ -16,6 +16,7 @@ public class Sav implements IIdoMulo {
     private int sozasIdozito;
     private boolean zuzalekos;
     private boolean csuszos;
+    private ArrayList savok;
     
     public static final int EXTREM_HO_SZINT = 10; // Példa konstans a pszeudokódhoz
 
@@ -42,10 +43,14 @@ public class Sav implements IIdoMulo {
     public void setUtszakasz(Utszakasz u) { this.utszakasz = u; }
     public void setIdojaras(Idojaras i) { this.idojaras = i; }
     public void setZuzalekos(boolean z) { this.zuzalekos = z; }
-    
+    public void setSavok(java.util.Collection<Sav> savok) {
+        this.savok = new java.util.ArrayList<>(savok);
+    }
     public void setJegpancel(boolean jeges) { 
         this.jegPancel = jeges; 
-        this.csuszos = jeges; 
+        if (jeges) {
+            this.csuszos = true;
+        }
     }
 
     public List<Jarmu> getRajtaAllok() { return rajtaAllok; }
@@ -98,6 +103,9 @@ public class Sav implements IIdoMulo {
 
     public void hoNovel(int mennyiseg) {
         this.hoVastagsag += mennyiseg;
+        if (this.hoVastagsag > 0) {
+            this.zuzalekos = false; // A hó betemeti a zúzalékot!
+        }
     }
 
     public void jegTorese() {

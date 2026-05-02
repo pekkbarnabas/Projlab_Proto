@@ -76,7 +76,13 @@ public class Vezerlo {
                     break;
                 case "buy":
                     if (szavak.length < 2) throw new Exception("Kevés paraméter! (buy <árucikk>)");
-                    takarito.vasarol(Arucikk.valueOf(szavak[1].toUpperCase()));
+                    Arucikk targy = Arucikk.valueOf(szavak[1].toUpperCase());
+                    if (takarito != null) {
+                        boolean siker = takarito.vasarol(targy);
+                        if (!siker) {
+                            hibaVolt = true;
+                        }
+                    }
                     break;
                 case "equip":
                     if (szavak.length < 3) throw new Exception("Kevés paraméter! (equip <hókotró> <fej>)");
@@ -93,15 +99,33 @@ public class Vezerlo {
                 case "work":
                     if (szavak.length < 2) throw new Exception("Kevés paraméter! (work <hókotró>)");
                     Hokotro dolgozo = (Hokotro) jarmuvek.get(szavak[1]);
-                    if (dolgozo != null) dolgozo.takarit();
+                    
+                    if (dolgozo != null) {
+                        boolean siker = dolgozo.takarit();
+                        if (!siker) {
+                            hibaVolt = true; // Megakadályozzuk a "> OK" kiírását!
+                        }
+                    } else {
+                        throw new Exception("Nem létező hókotró!");
+                    }
                     break;
                 case "move":
                     if (szavak.length < 3) throw new Exception("Kevés paraméter! (move <jármű> <célsáv>)");
                     Jarmu j = jarmuvek.get(szavak[1]);
                     Sav celSav = savok.get(szavak[2]);
                     if (j == null || celSav == null) throw new Exception("Nem létező jármű vagy sáv!");
-                    if (j instanceof Busz) ((Busz) j).lep(celSav);
-                    else if (j instanceof Hokotro) ((Hokotro) j).lep(celSav);
+                    boolean sikeresLepes = true;
+                    if (j instanceof Busz) {
+                        sikeresLepes = ((Busz) j).lep(celSav);
+                    } else if (j instanceof Hokotro) {
+                        sikeresLepes = ((Hokotro) j).lep(celSav);
+                    } else if (j instanceof Auto) {
+                        ((Auto) j).savotValt(celSav); 
+                        sikeresLepes = true;
+                    }
+                    if (!sikeresLepes) {
+                        hibaVolt = true; 
+                    }
                     break;
                 case "tick":
                     if (szavak.length < 2) throw new Exception("Kevés paraméter! (tick <szám/auto>)");
@@ -111,6 +135,9 @@ public class Vezerlo {
                     } else {
                         int n = Integer.parseInt(szavak[1]);
                         for (int i = 0; i < n; i++) tick();
+                    }
+                    if (idojaras != null) {
+                        idojaras.idotLep();
                     }
                     break;
                 case "random":
@@ -334,6 +361,9 @@ public class Vezerlo {
 
     private void mentes(String fajlnev) throws IOException {
         try (PrintWriter out = new PrintWriter(new FileWriter(fajlnev))) {
+            if (!isRandom) {
+                out.println("random off");
+            }
             for (String nev : csomopontok.keySet()) out.println("create csomopont " + nev);
             for (Map.Entry<String, Utszakasz> e : utszakaszok.entrySet()) {
                 Utszakasz u = e.getValue();
@@ -364,6 +394,15 @@ public class Vezerlo {
             if (takarito != null && takarito.getPenz() > 0) out.println("add penz " + takarito.getPenz());
             if (buszvezeto != null && buszvezeto.getPontszam() > 0) out.println("add pont " + buszvezeto.getPontszam());
             
+            if (takarito != null && takarito.getRaktar() != null) {
+                for (Arucikk cikk : Arucikk.values()) {
+                    int db = takarito.getRaktar().getKeszlet(cikk); 
+                    if (db > 0) {
+                        out.println("add raktar " + cikk.name().toLowerCase() + " " + db);
+                    }
+                }
+            }
+
             for (Map.Entry<String, Jarmu> e : jarmuvek.entrySet()) {
                 String tipus = (e.getValue() instanceof Auto) ? "auto" : (e.getValue() instanceof Busz) ? "busz" : "hokotro";
                 out.println("create jarmu " + tipus + " " + e.getKey() + " " + kulcsKeresese(savok, e.getValue().getAktualisSav()));

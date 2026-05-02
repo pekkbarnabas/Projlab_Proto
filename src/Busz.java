@@ -23,8 +23,8 @@ public class Busz extends Jarmu {
     public void setElakadt(boolean e) { this.elakadt = e; }
     public void setUtvonal(List<Csomopont> vegallomasok) {
         this.vegallomasok = vegallomasok;
-        if (!vegallomasok.isEmpty()) {
-            this.aktualisVegallomas = vegallomasok.get(0);
+        if (vegallomasok != null && vegallomasok.size() >= 2) {
+            this.aktualisVegallomas = vegallomasok.get(1);
         }
     }
 
@@ -87,6 +87,25 @@ public class Busz extends Jarmu {
             return false;
         }
 
+        // --- Szomszédság ellenőrzése ---
+        boolean talalt = false;
+        if (aktualisSav != null) {
+            for (Sav sz : aktualisSav.getSzomszedok()) {
+                if (sz == celSav) {
+                    talalt = true;
+                    break;
+                }
+            }
+        }
+
+        // Ha nincs a szomszédok között, kiírjuk a hibát és kilépünk
+        if (!talalt) {
+            System.out.println("> ERROR: A cel sav nem szomszedos");
+            return false;
+        }
+        // ----------------------------------------------------------------
+
+        // Ha idáig eljut, akkor legális a lépés!
         if (aktualisSav != null) {
             aktualisSav.eltavolit(this);
         }

@@ -1,12 +1,12 @@
 public class SarkanyFej implements IKotrofej {
     @Override
-    public void dolgozik(Sav s, Hokotro h) {
+    public boolean dolgozik(Sav s, Hokotro h) {
         boolean sikeresFogyasztas = h.kerozintFogyaszt(1);
         if (sikeresFogyasztas) {
             s.jegTorese();
-            s.hoCsokkent(Integer.MAX_VALUE); // Teljes olvasztás
-        } else {
-            System.out.println("> ERROR: Nincs elegendo kerozin");
+            s.hoCsokkent(Sav.EXTREM_HO_SZINT); // Vagy MAX_ERTEK
+            return true;
         }
+        return false; // Ezt figyeli majd a hókotró!
     }
 }

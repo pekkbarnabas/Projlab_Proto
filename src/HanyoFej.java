@@ -1,7 +1,7 @@
 public class HanyoFej implements IKotrofej {
     @Override
-    public void dolgozik(Sav s, Hokotro h) {
-        // Végleges eltávolítás
+    public boolean dolgozik(Sav s, Hokotro h) {
         s.hoCsokkent(Integer.MAX_VALUE);
+        return true; 
     }
 }

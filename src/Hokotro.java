@@ -11,28 +11,63 @@ public class Hokotro extends Jarmu {
         this.fej = ujFej;
     }
 
-    public boolean sotFogyaszt(int mennyiseg) {
-        if (tulajdonos == null || tulajdonos.getRaktar() == null) return false;
-        return tulajdonos.getRaktar().eroforrasCsokkent(Arucikk.SO, mennyiseg);
-    }
-
     public boolean kerozintFogyaszt(int mennyiseg) {
-        if (tulajdonos == null || tulajdonos.getRaktar() == null) return false;
-        return tulajdonos.getRaktar().eroforrasCsokkent(Arucikk.KEROZIN, mennyiseg);
+        if (tulajdonos != null && tulajdonos.getRaktar() != null) {
+            boolean siker = tulajdonos.getRaktar().eroforrasCsokkent(Arucikk.KEROZIN, mennyiseg);
+            if (siker) {
+                return true;
+            }
+        }
+        System.out.println("> ERROR: Nincs elegendo kerozin");
+        return false;
     }
 
     public boolean zuzalekotFogyaszt(int mennyiseg) {
-        if (tulajdonos == null || tulajdonos.getRaktar() == null) return false;
-        return tulajdonos.getRaktar().eroforrasCsokkent(Arucikk.ZUZOTTKO, mennyiseg);
-    }
-
-    public void takarit() {
-        if (fej != null && aktualisSav != null) {
-            fej.dolgozik(aktualisSav, this);
-            if (tulajdonos != null) {
-                tulajdonos.penztKap();
+        if (tulajdonos != null && tulajdonos.getRaktar() != null) {
+            boolean siker = tulajdonos.getRaktar().eroforrasCsokkent(Arucikk.ZUZOTTKO, mennyiseg);
+            if (siker) {
+                return true;
             }
         }
+        System.out.println("> ERROR: Nincs elegendo zuzottko");
+        return false;
+    }
+
+    public boolean sotFogyaszt(int mennyiseg) {
+        if (tulajdonos != null && tulajdonos.getRaktar() != null) {
+            boolean siker = tulajdonos.getRaktar().eroforrasCsokkent(Arucikk.SO, mennyiseg);
+            if (siker) {
+                return true;
+            }
+        }
+        System.out.println("> ERROR: Nincs elegendo so");
+        return false;
+    }
+
+    public boolean takarit() {
+        if (fej != null && aktualisSav != null) {
+            int hoElotte = aktualisSav.getHovastagsag();
+            boolean jegElotte = aktualisSav.isJegpancel();
+            boolean zuzalekElotte = aktualisSav.isZuzalekos();
+            int sozasElotte = aktualisSav.getSozasIdozito();
+            boolean sikeresMunka = fej.dolgozik(aktualisSav, this);
+            
+            if (!sikeresMunka) {
+                return false; // Kilépünk hamissal, ha nem volt elég anyag (pl. kerozin)
+            }
+
+            boolean tortentMunka = 
+                (aktualisSav.getHovastagsag() < hoElotte) ||       
+                (jegElotte && !aktualisSav.isJegpancel()) ||       
+                (!zuzalekElotte && aktualisSav.isZuzalekos()) ||   
+                (sozasElotte < aktualisSav.getSozasIdozito());     
+                
+            if (tortentMunka && tulajdonos != null) {
+                tulajdonos.penztKap();
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean lep(Sav cel) {

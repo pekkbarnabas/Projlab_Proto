@@ -51,6 +51,8 @@ public class Auto extends Jarmu {
     @Override
     public void megcsuszik() {
         if (!tesztSodrodas) {
+            this.setElakadt(true); 
+            this.buntetoido = 1;
             if (aktualisSav != null) {
                 // Biztonságos másolat
                 List<Jarmu> rajta = new ArrayList<>(aktualisSav.getRajtaAllok());

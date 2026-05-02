@@ -1,6 +1,7 @@
 public interface IKotrofej {
     /**
      * A paraméterként kapott sávon elvégzi a fej típusára jellemző módosításokat.
+     * @return 
      */
-    void dolgozik(Sav s, Hokotro h);
+    boolean dolgozik(Sav s, Hokotro h);
 }

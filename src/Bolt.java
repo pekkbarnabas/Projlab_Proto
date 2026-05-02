@@ -15,14 +15,15 @@ public class Bolt {
 
     public boolean elad(Takarito vevo, Arucikk targy) {
         if (!arak.containsKey(targy)) return false;
-        
         int ar = arak.get(targy);
-        boolean sikeres = vevo.fizet(ar); // Visszahívás a takarítóhoz
+        boolean sikeres = vevo.fizet(ar);
         
         if (sikeres) {
             vevo.getRaktar().eroforrasBovit(targy, 1);
             return true;
+        } else {
+            System.out.println("> ERROR: Nincs elegendo penz");
+            return false; 
         }
-        return false;
     }
 }
