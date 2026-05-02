@@ -101,11 +101,11 @@ public class Auto extends Jarmu {
         // Kikerülés logikája (strukturált vezérlés)
         if (blokkolt && aktualisSav != null) {
             List<Sav> szomszedok = aktualisSav.getSzomszedok();
-            if (!szomszedok.isEmpty()) {
-                Sav szomszedos = szomszedok.get(0);
+            for (Sav szomszedos : szomszedok) {
                 if (!szomszedos.isBlokkolt()) {
                     savotValt(szomszedos);
-                    blokkolt = false;
+                    blokkolt = false; // Sikeresen kikerültük az akadályt
+                    break;
                 }
             }
         }
