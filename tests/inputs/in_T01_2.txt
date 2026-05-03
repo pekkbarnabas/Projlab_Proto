@@ -1,0 +1,1 @@
+load nem_letezo_fajl.txt

@@ -1,0 +1,9 @@
+> OK
+> OK
+> OK
+> OK
+> OK
+> OK
+> OK
+> OK
+> ERROR: A cel sav nem szomszedos

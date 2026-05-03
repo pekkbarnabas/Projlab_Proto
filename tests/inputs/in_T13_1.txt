@@ -1,0 +1,8 @@
+create csomopont c1
+create csomopont c2
+create utszakasz u1 c1 c2 100 0
+create sav s1 u1
+add penz 2000
+buy hokotro
+create jarmu hokotro h2 s1
+save out_T13_1.txt

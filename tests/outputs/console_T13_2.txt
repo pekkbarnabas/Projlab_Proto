@@ -1,0 +1,5 @@
+> OK
+> OK
+> OK
+> OK
+ERROR: A megadott sav nem letezik

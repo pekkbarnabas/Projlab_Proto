@@ -1,0 +1,13 @@
+random off
+create csomopont c1
+create csomopont c2
+create utszakasz u1 c1 c2 100 0
+create sav s1 u1
+create sav s2 u1
+link sav s1 s2
+set sav s1 jeg true
+create jarmu auto a1 s2
+set jarmu a1 sodrodas false
+move a1 s1
+tick 1
+save out_T07_2.txt

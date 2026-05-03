@@ -6,16 +6,11 @@ create sav s1 u1
 create sav s2 u1
 set sav s1 jeg true
 link sav s1 s2
-create jarmu auto a1 s2
+create jarmu auto a1 s1
 create jarmu auto a2 s2
 set jarmu a1 elakadt true
-set jarmu a1 buntetoido 3
+set jarmu a1 buntetoido 1
 set jarmu a1 sodrodas true
 set utvonal a1 c1 c1
-set jarmu a2 elakadt true
-set jarmu a2 buntetoido 3
 set jarmu a2 sodrodas false
 set utvonal a2 c1 c1
-
-//itt ez nagyon fura szopas volt kijavitani de lehet mast elrontott
-//es pluszba ir ki dolgokat amiket nem kene: set jarmu a2 sodrodas false, set utvonalak

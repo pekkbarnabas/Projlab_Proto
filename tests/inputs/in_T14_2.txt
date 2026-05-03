@@ -1,0 +1,16 @@
+create csomopont c1
+create csomopont c2
+create utszakasz u1 c1 c2 100 0
+create sav s1 u1
+create sav s2 u1
+create sav s3 u1
+link sav s1 s2
+link sav s3 s2
+create jarmu auto a1 s1
+create jarmu auto a2 s3
+set utvonal a1 c1 c2
+set utvonal a2 c1 c2
+set sav s1 blokkolt true
+set sav s3 blokkolt true
+tick 1
+save out_T14_2.txt

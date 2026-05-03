@@ -1,0 +1,12 @@
+create csomopont c1
+create csomopont c2
+create utszakasz u1 c1 c2 100 0
+create sav s1 u1
+create sav s2 u1
+link sav s1 s2
+set sav s1 ho 10
+set sav s2 ho 0
+create jarmu hokotro h1 s1
+equip h1 hanyofej
+work h1
+save out_T19_1.txt

@@ -1,0 +1,16 @@
+create csomopont c1
+create csomopont c2
+create utszakasz u1 c1 c2 100 0
+create sav s1 u1
+create jarmu auto a1 s1
+create jarmu auto a2 s1
+create jarmu auto a3 s1
+create jarmu auto a4 s1
+create jarmu auto a5 s1
+set sav s1 athaladas 0
+move a1 s1
+move a2 s1
+move a3 s1
+move a4 s1
+move a5 s1
+save out_T19_2.txt

@@ -1,0 +1,2 @@
+add penz 900
+add raktar zuzottko 1

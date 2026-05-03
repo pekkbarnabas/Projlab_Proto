@@ -50,39 +50,51 @@ public class Auto extends Jarmu {
 
     @Override
     public void megcsuszik() {
-        if (!this.isTesztSodrodas()) {
-            this.setElakadt(true); 
+        boolean atcsuszik = false;
+
+        // Ha a random be van kapcsolva, 50% eséllyel átsodródik
+        if (tesztSodrodas) {
+            Random rand = new Random();
+            atcsuszik = rand.nextBoolean(); // true vagy false (50-50 esély)
+        }else{
+            atcsuszik = false;
+        }
+
+        // Átsodródik a szomszédba (ha az 50% így dobta, ÉS van szomszédos sáv)
+        if (atcsuszik && aktualisSav != null && !aktualisSav.getSzomszedok().isEmpty()) {
+            Sav s2 = aktualisSav.getSzomszedok().get(0);
+            aktualisSav.eltavolit(this);
+            s2.elfogad(this);
+            this.aktualisSav = s2;
+            this.aktualisUtszakasz = s2.getUtszakasz();
+
+            // Ütközés az új sávon lévőkkel
+            List<Jarmu> rajta = new ArrayList<>(s2.getRajtaAllok());
+            for (Jarmu j : rajta) {
+                if (j != this) {
+                    j.utkozik(this);
+                    this.utkozik(j);
+                    break;
+                }
+            }
+        } 
+        // Marad a saját sávjában (Random OFF, vagy a Random ON úgy sorsolta)
+        else {
+            this.elakad(); 
             this.buntetoido = 1;
+
             if (aktualisSav != null) {
-                // Biztonságos másolat
                 List<Jarmu> rajta = new ArrayList<>(aktualisSav.getRajtaAllok());
                 for (Jarmu j : rajta) {
                     if (j != this) {
                         j.utkozik(this);
-                        this.utkozik(j);
-                        break; //Csak az elsővel ütközik!
-                    }
-                }
-            }
-        } else {
-            if (aktualisSav != null && !aktualisSav.getSzomszedok().isEmpty()) {
-                Sav s2 = aktualisSav.getSzomszedok().get(0);
-                aktualisSav.eltavolit(this);
-                s2.elfogad(this);
-                this.aktualisSav = s2;
-                this.aktualisUtszakasz = s2.getUtszakasz();
-
-                List<Jarmu> rajta = new ArrayList<>(s2.getRajtaAllok());
-                for (Jarmu j : rajta) {
-                    if (j != this) {
-                        j.utkozik(this);
-                        this.utkozik(j);
-                        break; // Átsodródásnál is kilép
+                        break; 
                     }
                 }
             }
         }
     }
+
 
     @Override
     public void idotLep() {

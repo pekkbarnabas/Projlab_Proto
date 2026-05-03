@@ -17,6 +17,8 @@ public class Vezerlo {
     private boolean isRandom;
     private boolean autoTick;
 
+
+
     public Vezerlo() {
         init();
     }
@@ -409,8 +411,8 @@ public class Vezerlo {
             }
 
             for (Map.Entry<String, Jarmu> e : jarmuvek.entrySet()) {
-                String tipus = (e.getValue() instanceof Auto) ? "auto" : (e.getValue() instanceof Busz) ? "busz" : "hokotro";
-                out.println("create jarmu " + tipus + " " + e.getKey() + " " + kulcsKeresese(savok, e.getValue().getAktualisSav()));
+            String tipus = (e.getValue() instanceof Auto) ? "auto" : (e.getValue() instanceof Busz) ? "busz" : "hokotro";
+            out.println("create jarmu " + tipus + " " + e.getKey() + " " + kulcsKeresese(savok, e.getValue().getAktualisSav()));
             }
             for (Map.Entry<String, Jarmu> e : jarmuvek.entrySet()) {
                 if (e.getValue() instanceof Auto) {
@@ -423,12 +425,16 @@ public class Vezerlo {
                     if (a.getLakas() != null && a.getMunkahely() != null) {
                         out.println("set utvonal " + e.getKey() + " " + a.getLakas().getNev() + " " + a.getMunkahely().getNev());
                     }
+                } else if (e.getValue() instanceof Busz) {
+                    // Csak ezt az ágat adtuk hozzá a busz elakadásához és büntetőjéhez!
+                    Busz b = (Busz) e.getValue();
+                    if (b.isElakadt()) out.println("set jarmu " + e.getKey() + " elakadt true");
+                    if (b.getBuntetoido() > 0) out.println("set jarmu " + e.getKey() + " buntetoido " + b.getBuntetoido());
                 } else if (e.getValue() instanceof Hokotro) {
                     Hokotro h = (Hokotro) e.getValue();
                     if (h.getFej() != null) out.println("equip " + e.getKey() + " " + h.getFej().getClass().getSimpleName().toLowerCase());
                 }
             }
-
         }
     }
 
@@ -442,7 +448,7 @@ public class Vezerlo {
     }
 
     private void loadAllTesztek() {
-        File dir = new File("."); // Vagy a "tests" mappa
+        File dir = new File("/tests/inputs"); 
         File[] files = dir.listFiles((d, name) -> name.endsWith(".txt"));
         if (files != null) {
             for (File file : files) {
@@ -476,7 +482,7 @@ public class Vezerlo {
         System.out.println("create csomopont/utszakasz/sav/jarmu");
         System.out.println("link sav, set sav/jarmu/idojaras/utvonal");
         System.out.println("buy, add penz/pont/raktar, equip, work, move");
-        System.out.println("tick, save, load, reset, stat, exit");
+        System.out.println("tick, save, load, loadall, reset, stat, statall, exit");
     }
 
     private <T> String kulcsKeresese(Map<String, T> map, T ertek) {

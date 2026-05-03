@@ -1,0 +1,3 @@
+add penz 1000
+buy zuzottko
+save out_T06_1.txt

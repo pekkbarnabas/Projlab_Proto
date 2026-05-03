@@ -1,0 +1,5 @@
+create csomopont c1
+save mentes_01.txt
+reset
+load mentes_01.txt
+save out_T01_1.txt

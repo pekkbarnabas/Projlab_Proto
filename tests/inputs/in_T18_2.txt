@@ -1,0 +1,4 @@
+create csomopont c1
+create csomopont c2
+create utszakasz u1 c1 c2 100 1
+save out_T18_2.txt

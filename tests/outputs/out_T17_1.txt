@@ -5,5 +5,3 @@ create sav s1 u1
 create sav s2 u1
 link sav s1 s2
 add penz 500
-
-//miert nem csak penzadas?

@@ -55,7 +55,6 @@ public class Sav implements IIdoMulo {
 
     public List<Jarmu> getRajtaAllok() { return rajtaAllok; }
     public List<Sav> getSzomszedok() { return szomszedok; }
-    public List<Sav> getSzomszedokCsendes() { return szomszedok; }
     public int getHovastagsag() { return hoVastagsag; }
     public boolean isJegpancel() { return jegPancel; }
     public boolean isBlokkolt() { return blokkolt; }

@@ -1,0 +1,8 @@
+create csomopont c1
+create csomopont c2
+create utszakasz u1 c1 c2 100 0
+create sav s1 u1
+create sav s2 u1
+link sav s1 s2
+add pont 1
+create jarmu busz b1 s2
