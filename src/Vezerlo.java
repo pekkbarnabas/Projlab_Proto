@@ -6,18 +6,15 @@ public class Vezerlo {
     private Map<String, Utszakasz> utszakaszok = new HashMap<>();
     private Map<String, Sav> savok = new HashMap<>();
     private Map<String, Jarmu> jarmuvek = new HashMap<>();
-    
     private Takarito takarito;
     private Buszvezeto buszvezeto;
     private Idojaras idojaras;
     private Bolt bolt;
     private List<IIdoMulo> idomulok = new ArrayList<>();
-    
     private boolean fut;
-    private boolean isRandom;
     private boolean autoTick;
 
-
+    public static boolean isRandom;
 
     public Vezerlo() {
         init();

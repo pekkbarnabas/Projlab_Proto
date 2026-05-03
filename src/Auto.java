@@ -52,12 +52,15 @@ public class Auto extends Jarmu {
     public void megcsuszik() {
         boolean atcsuszik = false;
 
-        // Ha a random be van kapcsolva, 50% eséllyel átsodródik
-        if (tesztSodrodas) {
+        // Ha a játék normál módban fut (Random ON)
+        if (Vezerlo.isRandom) { 
             Random rand = new Random();
-            atcsuszik = rand.nextBoolean(); // true vagy false (50-50 esély)
-        }else{
-            atcsuszik = false;
+            atcsuszik = rand.nextBoolean(); // nem fix, 50-50% esély!
+        } 
+        // Ha teszt módban vagyunk (Random OFF)
+        else {
+            // Itt viszont nem sorsolunk, hanem szigorúan azt csináljuk, amit a teszt bemenet mond!
+            atcsuszik = this.tesztSodrodas; 
         }
 
         // Átsodródik a szomszédba (ha az 50% így dobta, ÉS van szomszédos sáv)

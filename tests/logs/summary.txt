@@ -1,4 +1,4 @@
-Tesztelesi jelentes - 2026. 05. 03. 11:34:32,25 
+Tesztelesi jelentes - 2026. 05. 03. 14:52:24,61 
 ------------------------------------------------ 
 [PASS] T01_1 
 [PASS] T01_2 
@@ -24,41 +24,7 @@ Tesztelesi jelentes - 2026. 05. 03. 11:34:32,25
 [PASS] T12_2 
 [PASS] T13_1 
 [PASS] T13_2 
-[FAIL] T14_1 
---- Elteresek kezdete [T14_1] --- 
-Comparing files TESTS\OUTPUTS\out_T14_1.txt and TESTS\EXPECTED\EXP_T14_1.TXT
-***** TESTS\OUTPUTS\out_T14_1.txt
-link sav s1 s2
-create jarmu auto a1 s1
-create jarmu auto a2 s2
-***** TESTS\EXPECTED\EXP_T14_1.TXT
-link sav s1 s2
-create jarmu auto a1 s2
-create jarmu auto a2 s2
-*****
-
-***** TESTS\OUTPUTS\out_T14_1.txt
-set jarmu a1 elakadt true
-set jarmu a1 buntetoido 1
-set jarmu a1 sodrodas true
-***** TESTS\EXPECTED\EXP_T14_1.TXT
-set jarmu a1 elakadt true
-set jarmu a1 buntetoido 3
-set jarmu a1 sodrodas true
-*****
-
-***** TESTS\OUTPUTS\out_T14_1.txt
-set utvonal a1 c1 c1
-set jarmu a2 sodrodas false
-***** TESTS\EXPECTED\EXP_T14_1.TXT
-set utvonal a1 c1 c1
-set jarmu a2 elakadt true
-set jarmu a2 buntetoido 3
-set jarmu a2 sodrodas false
-*****
-
---- Elteresek vege --- 
- 
+[PASS] T14_1 
 [PASS] T14_2 
 [PASS] T15_1 
 [PASS] T16_1 
@@ -68,4 +34,4 @@ set jarmu a2 sodrodas false
 [PASS] T18_3 
 [PASS] T19_1 
 [PASS] T19_2 
-Eredmeny: 33 / 34 sikeres 
+Eredmeny: 34 / 34 sikeres 
