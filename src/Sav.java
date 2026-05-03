@@ -1,6 +1,11 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Az úthálózat legkisebb egysége, egy forgalmi sávot reprezentál.
+ * Felelős a fizikai állapotok (hóvastagság, jegesedés, sózottság) tárolásáért
+ * és a járművek fogadásakor fellépő fizikai interakciók (elakadás, megcsúszás) kezeléséért.
+ */
 public class Sav implements IIdoMulo {
     private List<Sav> szomszedok;
     private List<Jarmu> rajtaAllok;
@@ -18,8 +23,14 @@ public class Sav implements IIdoMulo {
     private boolean csuszos;
     private ArrayList savok;
     
-    public static final int EXTREM_HO_SZINT = 10; // Példa konstans a pszeudokódhoz
+    /** A hóvastagság azon szintje, ami felett a nem speciális járművek elakadnak. */
+    public static final int EXTREM_HO_SZINT = 10;
 
+    /**
+     * Sav konstruktor.
+     * Alapértelmezetten tiszta állapottal indul, de a csúszósság alapvető tulajdonság, 
+     * ha jég alakulna ki rajta.
+     */
     public Sav() {
         this.szomszedok = new ArrayList<>();
         this.rajtaAllok = new ArrayList<>();
@@ -46,6 +57,10 @@ public class Sav implements IIdoMulo {
     public void setSavok(java.util.Collection<Sav> savok) {
         this.savok = new java.util.ArrayList<>(savok);
     }
+
+    /**
+     * Beállítja a jégpáncélt. Ha a sáv jeges, automatikusan csúszóssá is válik.
+     */
     public void setJegpancel(boolean jeges) { 
         this.jegPancel = jeges; 
         if (jeges) {
@@ -61,9 +76,14 @@ public class Sav implements IIdoMulo {
     public boolean isSozott() { return sozasIdozito > 0; }
     public Utszakasz getUtszakasz() { return utszakasz; }
     public int getSozasIdozito() {return sozasIdozito;}
+    public boolean isZuzalekos() { return this.zuzalekos; }
 
-    // --- Fizikai Logika (Pszeudokód alapján) ---
+    // --- Fizikai Logika ---
     
+    /**
+     * Egy jármű rálép a sávra. Itt dől el, hogy elakad-e a hóban vagy megcsúszik-e a jégen.
+     * @param j A sávra érkező jármű.
+     */
     public void elfogad(Jarmu j) {
         rajtaAllok.add(j);
         athaladasRegisztralasa();
@@ -78,10 +98,17 @@ public class Sav implements IIdoMulo {
         }
     }
 
+    /**
+     * Eltávolítja a járművet a sáv nyilvántartásából.
+     */
     public void eltavolit(Jarmu j) {
         rajtaAllok.remove(j);
     }
 
+    /**
+     * Csökkenti a hóvastagságot (takarítás hatására).
+     * Ha a hó eléggé lecsökken, a sávon várakozó elakadt járművek újra mozgásképessé válnak.
+     */
     public void hoCsokkent(int mennyiseg) {
         this.hoVastagsag -= mennyiseg;
         if (this.hoVastagsag < 0){
@@ -100,6 +127,10 @@ public class Sav implements IIdoMulo {
         }
     }
 
+    /**
+     * Növeli a hóvastagságot (havazás hatására).
+     * A friss hó betemeti a zúzalékot, így az hatástalanná válik.
+     */
     public void hoNovel(int mennyiseg) {
         this.hoVastagsag += mennyiseg;
         if (this.hoVastagsag > 0) {
@@ -107,19 +138,31 @@ public class Sav implements IIdoMulo {
         }
     }
 
+    /**
+     * Megszünteti a sávon a jégpáncélt és a csúszásveszélyt (pl. jégtörő fej használata után).
+     */
     public void jegTorese() {
         this.jegPancel = false;
         this.csuszos = false;
     }
 
+    /**
+     * Aktiválja a sózás hatását, ami bizonyos idő elteltével felolvasztja a jeget.
+     */
     public void sozas() {
         this.sozasIdozito = 3; // 3 tick múlva olvad fel
     }
 
+    /**
+     * Aktiválja a sózás hatását, ami bizonyos idő elteltével felolvasztja a jeget.
+     */
     public void zuzalekSzoras() {
         this.zuzalekos = true;
     }
 
+    /**
+     * Minden áthaladó jármű után nő a számláló. Ha eléri a küszöböt, a sáv letömörödik és eljegesedik.
+     */
     public void athaladasRegisztralasa() {
         this.athaladasokSzama++;
         if (this.athaladasokSzama >= this.jegesedesKuszob) {
@@ -127,6 +170,9 @@ public class Sav implements IIdoMulo {
         }
     }
 
+    /**
+     * Az idő múlásával a sózás hatása ketyeg lefelé. Amikor lejár, a jég elolvad.
+     */
     @Override
     public void idotLep() {
         if (this.sozasIdozito > 0) {
@@ -136,8 +182,5 @@ public class Sav implements IIdoMulo {
             }
         }
     }
-
-    public boolean isZuzalekos() { return this.zuzalekos; }
-
 
 }
