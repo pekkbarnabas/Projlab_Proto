@@ -8,12 +8,7 @@ echo =========================================
 REM --- UJ RESZ: Automatikus Java forditas (Compilation) ---
 echo Java fajlok forditasa...
 if not exist "bin" mkdir bin
-
-REM JAVÍTÁS 1: Osszegyujtjuk az osszes .java fajlt a src mappabol es almappaibol
-dir /s /B src\*.java > sources.txt
-javac -encoding UTF-8 -d bin @sources.txt
-del sources.txt
-
+javac -encoding UTF-8 -d bin src\*.java
 if %errorlevel% neq 0 (
     echo.
     echo [KRITIKUS HIBA] Nem sikerult leforditani a Java kodot! 
@@ -50,8 +45,8 @@ for %%f in (tests\inputs\in_*.txt) do (
     
     echo Futtatas: [!testid!] teszteset...
     
-    REM JAVÍTÁS 2: Itt a main.Main-t hivjuk a sima Main helyett!
-    java -cp bin main.Main < "!input!" > "!output_console!" 2>&1
+    REM Java program futtatasa
+    java -cp bin Main < "!input!" > "!output_console!" 2>&1
     
     REM Fájl áthelyezése
     if exist "out_!testid!.txt" (
@@ -70,11 +65,11 @@ for %%f in (tests\inputs\in_*.txt) do (
     fc "!file_to_compare!" "!expected!" > NUL 2>&1
     
     if !errorlevel! equ 0 (
-        echo    -^> [PASS]
+        echo   -^> [PASS]
         echo [PASS] !testid! >> %LOGFILE%
         set /a PASS_COUNT+=1
     ) else (
-        echo    -^> [FAIL] Elteres talalhato!
+        echo   -^> [FAIL] Elteres talalhato!
         echo [FAIL] !testid! >> %LOGFILE%
         echo --- Elteresek kezdete [!testid!] --- >> %LOGFILE%
         fc "!file_to_compare!" "!expected!" >> %LOGFILE%
