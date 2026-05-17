@@ -13,16 +13,18 @@ public class CsomopontView extends View {
         this.y = y;
     }
 
-    public int getX() { return this.x; }
-    
-    public int getY() { return this.y; }
-
     @Override
     public void draw(Graphics g) {
         g.setColor(Color.DARK_GRAY);
         g.fillOval(x - 15, y - 15, 30, 30); 
         
         g.setColor(Color.WHITE);
-        g.drawString(modell.getNev(), x - 10, y + 5);
-    }
+        if (modell.getNev() != null) {
+            g.drawString(modell.getNev(), x - 10, y + 5);
+        }
+    } 
+    
+    public int getX() { return this.x; }
+    
+    public int getY() { return this.y; }
 }

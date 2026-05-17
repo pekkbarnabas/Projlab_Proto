@@ -22,6 +22,9 @@ public class Bolt {
         arak.put(Arucikk.SO, 50);
         arak.put(Arucikk.KEROZIN, 200);
         arak.put(Arucikk.HOKOTRO, 1000);
+        arak.put(Arucikk.SOPROFEJ, 300);
+        arak.put(Arucikk.JEGTOROFEJ, 400);
+        arak.put(Arucikk.SARKANYFEJ, 500);
     }
 
     /**

@@ -41,6 +41,7 @@ public class Vezerlo implements IObservable{
     // Globális hivatkozás a grafikus ablakra és a panelre
     private view.MainFrame guiAblak = null;
     private view.SimulationPanel guiPanel = null;
+    private view.ValasztoPanel valasztoPanel = null;
 
     public static boolean isRandom;
 
@@ -483,9 +484,9 @@ public class Vezerlo implements IObservable{
             Map<Csomopont, view.CsomopontView> csomopontMap = new HashMap<>();
             
             // 1. Csomópontok elrendezése kör alakban
-            int sugar = 250; // Kicsit nagyobb kör
-            int kozeppontX = 500; 
-            int kozeppontY = 300;
+            int sugar = 180; // KISEBB SUGÁR (250 helyett)
+            int kozeppontX = 350; // BALRABB TOLVA (500 helyett)
+            int kozeppontY = 280; // Kicsit feljebb tolva
             int i = 0;
             int n = csomopontok.size();
 
@@ -501,28 +502,46 @@ public class Vezerlo implements IObservable{
                 i++;
             }
 
-            // 2. Sávok kirajzolása (Az Utszakasz.java alapján!)
+            // 2. Sávok és Útszakaszok kirajzolása (Párhuzamos eltolással!)
             List<view.SavView> svLista = new ArrayList<>();
-            for (Sav s : savok.values()) {
-                Utszakasz ut = s.getUtszakasz();
-                if (ut != null) {
-                    Csomopont indulo = ut.getKezdopont(); // A te metódusod neve
-                    Csomopont erkezo = ut.getVegpont();   // A te metódusod neve
+            // Most az útszakaszokon megyünk végig, nem a sávokon, mert az útszakasz fogja össze a párhuzamos sávokat
+            for (Utszakasz ut : utszakaszok.values()) {
+                Csomopont indulo = ut.getKezdopont(); 
+                Csomopont erkezo = ut.getVegpont();   
 
-                    view.CsomopontView vIndulo = csomopontMap.get(indulo);
-                    view.CsomopontView vErkezo = csomopontMap.get(erkezo);
+                view.CsomopontView vIndulo = csomopontMap.get(indulo);
+                view.CsomopontView vErkezo = csomopontMap.get(erkezo);
 
-                    if (vIndulo != null && vErkezo != null) {
-                        view.SavView sv = new view.SavView(s, vIndulo.getX(), vIndulo.getY(), vErkezo.getX(), vErkezo.getY());
+                if (vIndulo != null && vErkezo != null) {
+                    // Matematika a merőleges (párhuzamos) eltoláshoz
+                    int dx = vErkezo.getX() - vIndulo.getX();
+                    int dy = vErkezo.getY() - vIndulo.getY();
+                    double hossz = Math.sqrt(dx * dx + dy * dy);
+                    double nx = -dy / hossz; // Merőleges X
+                    double ny = dx / hossz;  // Merőleges Y
+
+                    List<Sav> utSavjai = ut.getSavok();
+                    int savSzam = utSavjai.size();
+                    int savSzelesseg = 12; // 12 pixel vastag egy sáv
+
+                    for (int k = 0; k < savSzam; k++) {
+                        Sav s = utSavjai.get(k);
+                        // Kiszámoljuk, mennyivel kell eltolni az adott sávot a vonal közepétől
+                        double offset = (k - (savSzam - 1) / 2.0) * savSzelesseg;
+                        int offsetX = (int)(nx * offset);
+                        int offsetY = (int)(ny * offset);
+
+                        view.SavView sv = new view.SavView(s, vIndulo.getX(), vIndulo.getY(), vErkezo.getX(), vErkezo.getY(), offsetX, offsetY);
                         svLista.add(sv);
-                        guiPanel.addView(sv); // Sáv a vászonra
+                        guiPanel.addView(sv); 
                     }
                 }
             }
 
             // 3. Járművek kirajzolása
-            for (Jarmu j : jarmuvek.values()) {
-                view.JarmuView jv = new view.JarmuView(j, svLista);
+            for (Map.Entry<String, Jarmu> entry : jarmuvek.entrySet()) {
+                // Az entry.getKey() adja meg az azonosítót, pl. "auto1"
+                view.JarmuView jv = new view.JarmuView(entry.getValue(), svLista, entry.getKey());
                 guiPanel.addView(jv);
             }
 
@@ -579,19 +598,174 @@ public class Vezerlo implements IObservable{
 
     private void handleGui() {
         try {
-            // Ha még nem nyitottuk meg az ablakot, akkor létrehozzuk
+            // 1. Ha még nem nyitottuk meg az ablakot, akkor létrehozzuk és elmentjük a globális változókba
             if (guiAblak == null) {
                 guiAblak = new view.MainFrame(this);
                 guiPanel = guiAblak.getSimulationPanel();
+                valasztoPanel = new view.ValasztoPanel(guiAblak, this);
             }
 
-            // Megjelenítjük (itt már nem teszünk rá dummy modelleket, mert azt a load csinálja!)
+            // 2. Dummy modellek létrehozása a teszthez
+            Csomopont cs1 = new Csomopont("cs1");
+            Csomopont cs2 = new Csomopont("cs2");
+            Utszakasz tesztUt = new Utszakasz(cs1, cs2, 10, 0);
+            Sav tesztSav = new Sav();
+            tesztUt.addSav(tesztSav);
+            Auto tesztAuto = new Auto(cs1, cs2, false);
+            
+            tesztAuto.setAktualisSav(tesztSav); 
+            tesztAuto.setPozicio(0.0f);
+            idomulok.add(tesztAuto);
+
+            // 3. Nézetek (View) létrehozása a beljebb húzott képernyő-koordinátákkal
+            view.CsomopontView csv1 = new view.CsomopontView(cs1, 100, 250);
+            view.CsomopontView csv2 = new view.CsomopontView(cs2, 550, 250);
+            view.SavView sv = new view.SavView(tesztSav, 100, 250, 550, 250,0,0);
+
+            // A jármű nézetének kell a sávok listája és a teszt azonosító (pl. "auto1")
+            java.util.List<view.SavView> savLista = new java.util.ArrayList<>();
+            savLista.add(sv);
+            view.JarmuView jv = new view.JarmuView(tesztAuto, savLista, "auto1");
+
+            // 4. Elemek hozzáadása a globális vászonhoz (megfelelő sorrendben!)
+            guiPanel.clearViews();   // Letöröljük a korábbiakat, ha voltak
+            guiPanel.addView(sv);   // Sáv legalulra
+            guiPanel.addView(csv1); // Csomópontok rá
+            guiPanel.addView(csv2);
+            guiPanel.addView(jv);   // Jármű legfelülre
+
+            // 5. Ablak megjelenítése és frissítése
             guiAblak.setVisible(true);
-            System.out.println("> GUI elinditva. Írd be a 'load' parancsot egy pálya betöltéséhez!");
+            guiPanel.update();
+            System.out.println("> OK");
             
         } catch (Exception e) {
             System.out.println("> Hiba a GUI inditasakor: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public int getTakaritoPenz() {
+        return takarito != null ? takarito.getPenz() : 0;
+    }
+
+    public int getKeszlet(model.gazdasag.Arucikk cikk) {
+        if (takarito != null && takarito.getRaktar() != null) {
+            return takarito.getRaktar().getKeszlet(cikk);
+        }
+        return 0;
+    }
+
+    public int getBuszvezetoPontszam() {
+        return buszvezeto != null ? buszvezeto.getPontszam() : 0;
+    }
+
+    public Map<String, Sav> getSavok() { return savok; }
+
+    // A ValasztoPanel hívja meg, amikor a játékos kattint
+    public void iranytValaszt(model.palya.Sav valasztottSav) {
+        // Később ide jön az a logika, ami az aktuális játékos (pl. Hókotró) járművét
+        // ráteszi a kiválasztott sávra, és frissíti a koordinátáit.
+        System.out.println("Játékos kiválasztotta a sávot: " + valasztottSav);
+        
+        // parancsFeldolgoz("move hokotro1 " + kulcsKeresese(savok, valasztottSav)); // Példa a későbbiekre
+    }
+
+    // Ezt hívja meg a grafikus vászon, ha a játékos rákattint egy sávra
+    public void kattintasSavon(model.palya.Sav s) {
+        String savNev = kulcsKeresese(savok, s);
+        
+        // 1. Állapot lekérdezése, hogy szép üzenetet tudjunk kiírni
+        String allapot = "Tiszta";
+        if (s.isJegpancel()) allapot = "Jeges";
+        else if (s.getHovastagsag() > 0) allapot = "Havas (" + s.getHovastagsag() + " cm)";
+        else if (s.isZuzalekos()) allapot = "Zúzalékos";
+
+        // 2. Felugró ablak az opciókkal
+        String[] opciok = {"Sózás (1 Só)", "Zúzalékozás (1 Zúzalék)", "Mégsem"};
+        int valasztas = javax.swing.JOptionPane.showOptionDialog(
+                guiAblak,
+                "Sáv: " + savNev + "\nJelenlegi állapot: " + allapot + "\n\nMit szeretnél tenni?",
+                "Sáv Interakció",
+                javax.swing.JOptionPane.DEFAULT_OPTION,
+                javax.swing.JOptionPane.QUESTION_MESSAGE,
+                null, 
+                opciok, 
+                opciok[2]
+        );
+
+        // 3. A játékos döntésének feldolgozása
+        if (valasztas == 0) { // Sózást választotta
+            if (getKeszlet(model.gazdasag.Arucikk.SO) > 0) {
+                // Siker! Beállítjuk a sávot (leolvad a jég és a hó)
+                parancsFeldolgoz("set sav " + savNev + " jeg false");
+                parancsFeldolgoz("set sav " + savNev + " ho 0");
+                
+                // Levonunk egy sót a raktárból
+                // (Ha van rá külön metódusod, azt is hívhatod, most közvetlenül a raktárt módosítjuk)
+                takarito.getRaktar().eroforrasBovit(model.gazdasag.Arucikk.SO, -1); 
+                System.out.println("> " + savNev + " besózva!");
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(guiAblak, "Nincs elég só a raktárban! Irány a bolt!");
+            }
+            
+        } else if (valasztas == 1) { // Zúzalékot választotta
+            // JAVÍTVA: Itt is a te pontos Arucikk nevedet használd!
+            if (getKeszlet(model.gazdasag.Arucikk.ZUZOTTKO) > 0) {
+                // A "set sav" parancsnál maradhat a "zuzalek", mert a set metódusodban úgy hagytad!
+                parancsFeldolgoz("set sav " + savNev + " zuzalek true");
+                
+                // JAVÍTVA: A levonásnál is a ZUZOTTKO kell
+                takarito.getRaktar().eroforrasBovit(model.gazdasag.Arucikk.ZUZOTTKO, -1);
+                System.out.println("> " + savNev + " lezúzalékozva!");
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(guiAblak, "Nincs elég zúzalék a raktárban! Irány a bolt!");
+            }
+        }
+
+        // 4. Szólunk a grafikus felületnek, hogy frissüljön (Színek a pályán + Raktárkészlet a Stat panelen)
+        notifyObservers();
+    }
+
+    // ÚJ METÓDUS: Ezt hívja a vászon, ha a játékos rákattint egy Járműre!
+    public void kattintasJarmuvon(model.jarmuvek.Jarmu j) {
+        String nev = kulcsKeresese(jarmuvek, j);
+        
+        if (j instanceof model.jarmuvek.Hokotro) {
+            model.jarmuvek.Hokotro h = (model.jarmuvek.Hokotro) j;
+            String jelenlegiFej = (h.getFej() != null) ? h.getFej().getClass().getSimpleName() : "Nincs (Alap)";
+            
+            // Felszerelés menü!
+            String[] opciok = {"Söprőfej felszerelése", "Jégtörőfej felszerelése", "Sárkányfej felszerelése", "Leszerelés (Nincs fej)", "Mégsem"};
+            int valasztas = javax.swing.JOptionPane.showOptionDialog(
+                    guiAblak,
+                    "Hókotró kiválasztva: " + nev + "\nJelenlegi eszköz: " + jelenlegiFej + "\n\nMit szeretnél felszerelni?",
+                    "Hókotró Felszerelése",
+                    javax.swing.JOptionPane.DEFAULT_OPTION,
+                    javax.swing.JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    opciok,
+                    opciok[4]
+            );
+
+            // A játékos döntésének feldolgozása
+            if (valasztas == 0) {
+                if (getKeszlet(model.gazdasag.Arucikk.SOPROFEJ) > 0) parancsFeldolgoz("equip " + nev + " soprofej");
+                else javax.swing.JOptionPane.showMessageDialog(guiAblak, "Nincs a raktárban Söprőfej!");
+            } else if (valasztas == 1) {
+                if (getKeszlet(model.gazdasag.Arucikk.JEGTOROFEJ) > 0) parancsFeldolgoz("equip " + nev + " jegtorofej");
+                else javax.swing.JOptionPane.showMessageDialog(guiAblak, "Nincs a raktárban Jégtörőfej!");
+            } else if (valasztas == 2) {
+                if (getKeszlet(model.gazdasag.Arucikk.SARKANYFEJ) > 0) parancsFeldolgoz("equip " + nev + " sarkanyfej");
+                else javax.swing.JOptionPane.showMessageDialog(guiAblak, "Nincs a raktárban Sárkányfej!");
+            } else if (valasztas == 3) {
+                parancsFeldolgoz("equip " + nev + " nincs");
+            }
+
+            notifyObservers(); // Statisztikák frissítése
+        } else {
+            // Ha buszra vagy autóra kattintott, nekik nincs boltos dolguk!
+            javax.swing.JOptionPane.showMessageDialog(guiAblak, "Ez a jármű (" + nev + ") automatikusan közlekedik.\nCsak a Hókotrókra szerelhetsz eszközt!");
         }
     }
 

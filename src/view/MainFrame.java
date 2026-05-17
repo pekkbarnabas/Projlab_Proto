@@ -6,21 +6,36 @@ import java.awt.BorderLayout;
 
 public class MainFrame extends JFrame {
     private SimulationPanel simulationPanel;
+    private ControlPanel controlPanel;
+    private BoltPanel boltPanel;
+    private StatPanel statPanel;
 
     public MainFrame(Vezerlo vezerlo) {
         setTitle("Zúzmaraváros Hóeltakarítás Szimulátor");
-        setSize(1000, 700);
+        setSize(1100, 750); // Kicsit megnöveljük az ablakot, hogy kényelmesen elférjenek az oldalsó panelek
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Vászon létrehozása és hozzáadása az ablakhoz (középre)
+        // 1. Játékfelület létrehozása és hozzáadása (KÖZÉPRE)
         simulationPanel = new SimulationPanel();
+        simulationPanel.setVezerlo(vezerlo);
         add(simulationPanel, BorderLayout.CENTER);
 
-        // A legfontosabb lépés: a vászon feliratkozik a Vezérlőre!
-        vezerlo.addObserver(simulationPanel);
+        // 2. ÚJ PANELEK HOZZÁADÁSA A TERV SZERINT
+        controlPanel = new ControlPanel(vezerlo);
+        add(controlPanel, BorderLayout.SOUTH); // ALULRA
 
-        setLocationRelativeTo(null); // Középre igazítja az ablakot a képernyőn
+        boltPanel = new BoltPanel(vezerlo);
+        add(boltPanel, BorderLayout.EAST); // JOBBRA
+
+        statPanel = new StatPanel(vezerlo);
+        add(statPanel, BorderLayout.WEST); // BALRA
+
+        // A vászon továbbra is feliratkozik a Vezérlőre
+        vezerlo.addObserver(simulationPanel);
+        vezerlo.addObserver(statPanel);
+
+        setLocationRelativeTo(null); 
     }
     
     public SimulationPanel getSimulationPanel() {
